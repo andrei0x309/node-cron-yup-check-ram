@@ -39,9 +39,18 @@ const checkRam = async (supabase,interval) => {
   }
 
   if(count > 2000){
-    const { data } = await supabase.from('uptime-check-record').select('id').order('uptime-check-record', { ascending: true }).limit(1);
+    const { data } = await supabase.from('uptime-check-record').select('id').limit(1);
     const id = data[0].id;
-    await supabase.from('uptime-check-record').lte('id',500+id).delete();
+    await supabase.from('uptime-check-record').delete().lte('id',500+id);
+
+    const  dataNoDel  = (await supabase
+      .from('yup-status-settings')
+      .select('*')
+      .eq('id', 2)).data[0];
+    let noDel = Number(dataNoDel.value);
+    noDel+=500;
+     await supabase.from('yup-status-settings').update({ value: noDel }).eq('id', 2);
+
   }
  
   const yupAccountInfo = await eosApi.getAccount('yupyupyupyup');
@@ -63,13 +72,13 @@ const checkRam = async (supabase,interval) => {
     ])
     
   }
-  const { data } = await supabase
-    .from('yup-ram-check')
-    .select()
-    .match('id', 1);
-  let noChecks = Number(data[0].value);
+  const  dataNoChecks  = (await supabase
+    .from('yup-status-settings')
+    .select('*')
+    .eq('id', 1)).data[0];
+  let noChecks = Number(dataNoChecks.value);
   noChecks++;
-  await supabase.from('yup-ram-check').match('id', 1).update({ value: noChecks });
+  await supabase.from('yup-status-settings').update({ value: noChecks }).eq('id', 1);
 
 }
 
