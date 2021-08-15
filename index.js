@@ -67,9 +67,9 @@ const checkRam = async (supabase,interval) => {
     .from('yup-ram-check')
     .select()
     .match('id', 1);
-  const count = Number(data[0].value);
-  count++;
-  await supabase.from('yup-ram-check').match('id', 1).update({ value: count });
+  let noChecks = Number(data[0].value);
+  noChecks++;
+  await supabase.from('yup-ram-check').match('id', 1).update({ value: noChecks });
 
 }
 
