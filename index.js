@@ -72,14 +72,14 @@ const checkRam = async (supabase,interval) => {
 
   await supabase
   .from('yup-status-settings')
-  .insert([
+  .update( 
     { value: Date.now(),
       'value-json': {
         ramOverUsedForYupProtocol: ramOverUsedForYupProtocol,
         ramOverUsedForYupManager: ramOverUsedForYupManager,
       }
        }
-  ])
+  ).eq('id', 4);
 
 
   } else {
@@ -98,7 +98,7 @@ const checkRam = async (supabase,interval) => {
       .eq('id', 3)).data[0];
       let noChecks = Number(dataNoOfFailedChecks.value);
       noChecks++
-      await supabase.from('yup-status-settings').update({ value: noChecks }).eq('id', 1);
+      await supabase.from('yup-status-settings').update({ value: noChecks }).eq('id', 3);
   } else {
   const  dataNoChecks  = (await supabase
     .from('yup-status-settings')
@@ -106,8 +106,9 @@ const checkRam = async (supabase,interval) => {
     .eq('id', 1)).data[0];
   let noChecks = Number(dataNoChecks.value);
   noChecks++;
+  await supabase.from('yup-status-settings').update({ value: noChecks }).eq('id', 1);
   }
-
+  
 }
 
 let interval = setInterval(() => checkRam(supabase,interval), 75000);
