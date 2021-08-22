@@ -74,7 +74,7 @@ const checkRam = async (supabase,interval) => {
   .from('yup-status-settings')
   .update( 
     { value: Date.now(),
-      'value-json': {
+      'json-value': {
         ramOverUsedForYupProtocol: ramOverUsedForYupProtocol,
         ramOverUsedForYupManager: ramOverUsedForYupManager,
       }
